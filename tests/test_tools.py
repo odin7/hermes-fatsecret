@@ -95,6 +95,67 @@ class TestAnalyzeFoodPhoto(unittest.TestCase):
         )
 
 
+class TestAnalyzeFoodPhotoHermesBackend(unittest.TestCase):
+    def setUp(self):
+        import os
+        os.environ["FATSECRET_RECOGNITION_BACKEND"] = "hermes"
+
+    def tearDown(self):
+        import os
+        os.environ.pop("FATSECRET_RECOGNITION_BACKEND", None)
+
+    @patch("tools._client")
+    def test_hermes_backend_uses_search(self, mock_client_fn):
+        mock_client = MagicMock()
+        mock_client.search_foods.return_value = [_make_candidate()]
+        mock_client_fn.return_value = mock_client
+
+        import tools
+        result = json.loads(tools.analyze_food_photo({
+            "image_path": "/tmp/photo.jpg",
+            "description": "a bowl of oatmeal with blueberries",
+        }))
+        self.assertEqual(result["status"], "ok")
+        self.assertEqual(result["backend"], "hermes")
+        mock_client.search_foods.assert_called_once()
+        mock_client.image_recognition.assert_not_called()
+
+    @patch("tools._client")
+    def test_hermes_backend_missing_description_returns_error(self, _mock):
+        import tools
+        result = json.loads(tools.analyze_food_photo({"image_path": "/tmp/photo.jpg"}))
+        self.assertIn("error", result)
+        self.assertIn("hermes", result["error"].lower())
+
+    @patch("tools._client")
+    def test_hermes_backend_no_results(self, mock_client_fn):
+        mock_client = MagicMock()
+        mock_client.search_foods.return_value = []
+        mock_client_fn.return_value = mock_client
+
+        import tools
+        result = json.loads(tools.analyze_food_photo({
+            "image_path": "/tmp/photo.jpg",
+            "description": "xyzzy unrecognizable dish",
+        }))
+        self.assertEqual(result["status"], "no_results")
+
+    @patch("tools._client")
+    def test_fatsecret_backend_unchanged_with_env_unset(self, mock_client_fn):
+        import os
+        os.environ.pop("FATSECRET_RECOGNITION_BACKEND", None)
+
+        mock_client = MagicMock()
+        mock_client.image_recognition.return_value = [_make_candidate()]
+        mock_client_fn.return_value = mock_client
+
+        import tools
+        result = json.loads(tools.analyze_food_photo({"image_path": "/tmp/photo.jpg"}))
+        self.assertEqual(result["backend"], "fatsecret")
+        mock_client.image_recognition.assert_called_once()
+        mock_client.search_foods.assert_not_called()
+
+
 class TestSearchFood(unittest.TestCase):
     @patch("tools._client")
     def test_returns_results(self, mock_client_fn):

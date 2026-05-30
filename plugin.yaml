@@ -41,3 +41,10 @@ requires_env:
       Paired with FATSECRET_OAUTH_TOKEN.
     url: "https://platform.fatsecret.com/docs/v1/profile.get_auth"
     secret: true
+
+optional_env:
+  - name: FATSECRET_RECOGNITION_BACKEND
+    description: >
+      Image recognition backend. 'fatsecret' (default) calls the FatSecret
+      Image Recognition API. 'hermes' uses the model's own vision to describe
+      the food, then searches FatSecret by text — no Image Recognition add-on needed.

@@ -1,12 +1,17 @@
 ANALYZE_FOOD_PHOTO = {
     "name": "analyze_food_photo",
     "description": (
-        "Identify food in a photograph using FatSecret Image Recognition and return "
-        "ranked candidates with nutrition data. This tool performs NO writes. "
+        "Identify food in a photograph and return ranked FatSecret candidates with "
+        "nutrition data. This tool performs NO writes. "
+        "Two recognition backends are available, selected by the "
+        "FATSECRET_RECOGNITION_BACKEND environment variable:\n"
+        "• 'fatsecret' (default) — sends the image to FatSecret Image Recognition API; "
+        "do NOT pass description.\n"
+        "• 'hermes' — you (the model) look at the image and describe what food you see, "
+        "then pass that description; the handler searches FatSecret by text.\n"
         "After calling it, present the candidates (food name, serving description, "
         "calories) to the user and ask them to confirm the specific food and serving "
-        "size before anything is logged. If the image path is not known, ask the user "
-        "to share the photo first."
+        "size before anything is logged."
     ),
     "parameters": {
         "type": "object",
@@ -18,6 +23,15 @@ ANALYZE_FOOD_PHOTO = {
                     "When the user sends a photo, pass the file path from the "
                     "session context (e.g. /tmp/hermes/photo_abc.jpg). "
                     "Alternatively, provide an HTTP/HTTPS URL."
+                ),
+            },
+            "description": {
+                "type": "string",
+                "description": (
+                    "Required when FATSECRET_RECOGNITION_BACKEND=hermes. "
+                    "Look at the image yourself and describe the food(s) you see "
+                    "(e.g. 'a bowl of oatmeal with blueberries'). "
+                    "This is passed to FatSecret search. Ignored for the fatsecret backend."
                 ),
             },
             "region": {

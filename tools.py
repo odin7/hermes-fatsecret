@@ -27,12 +27,22 @@ def _default_meal() -> str:
 _logged_this_session: set[tuple] = set()
 
 
+def _recognition_backend() -> str:
+    return os.environ.get("FATSECRET_RECOGNITION_BACKEND", "fatsecret").lower()
+
+
 def analyze_food_photo(args: dict, **kwargs: Any) -> str:
-    """Identify food in a photo via FatSecret Image Recognition. No writes."""
+    """Identify food in a photo. Backend selected by FATSECRET_RECOGNITION_BACKEND."""
+    backend = _recognition_backend()
+    if backend == "hermes":
+        return _analyze_hermes(args, **kwargs)
+    return _analyze_fatsecret(args, **kwargs)
+
+
+def _analyze_fatsecret(args: dict, **kwargs: Any) -> str:
     image_source = (
         args.get("image_path")
         or args.get("image_url")
-        # Fallback: check for attachment paths injected by Hermes gateway
         or _extract_attachment(kwargs)
     )
     if not image_source:
@@ -43,9 +53,7 @@ def analyze_food_photo(args: dict, **kwargs: Any) -> str:
     meal_hint = args.get("meal_hint") or _default_meal()
 
     try:
-        candidates = _client().image_recognition(
-            image_source, region=region, language=language
-        )
+        candidates = _client().image_recognition(image_source, region=region, language=language)
     except Exception as exc:  # noqa: BLE001
         return _handle_api_error(exc, context="image recognition")
 
@@ -60,6 +68,45 @@ def analyze_food_photo(args: dict, **kwargs: Any) -> str:
 
     return json.dumps({
         "status": "ok",
+        "backend": "fatsecret",
+        "meal_hint": meal_hint,
+        "candidates": [c.to_dict() for c in candidates],
+        "instruction": (
+            "Present these candidates to the user. Ask them to confirm the food, "
+            "serving size, and quantity before logging."
+        ),
+    })
+
+
+def _analyze_hermes(args: dict, **kwargs: Any) -> str:
+    description = args.get("description", "").strip()
+    if not description:
+        return json.dumps({
+            "error": (
+                "FATSECRET_RECOGNITION_BACKEND is set to 'hermes'. "
+                "Look at the image and describe the food(s) you see, "
+                "then call this tool again with the description."
+            )
+        })
+
+    region = args.get("region", "US")
+    language = args.get("language", "en")
+    meal_hint = args.get("meal_hint") or _default_meal()
+
+    try:
+        candidates = _client().search_foods(description, region=region, language=language)
+    except Exception as exc:  # noqa: BLE001
+        return _handle_api_error(exc, context="food search")
+
+    if not candidates:
+        return json.dumps({
+            "status": "no_results",
+            "message": f"No FatSecret matches for '{description}'. Try a more specific description.",
+        })
+
+    return json.dumps({
+        "status": "ok",
+        "backend": "hermes",
         "meal_hint": meal_hint,
         "candidates": [c.to_dict() for c in candidates],
         "instruction": (
