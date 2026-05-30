@@ -40,29 +40,20 @@ pip install fatsecret-food-hermes
 1. Register at [platform.fatsecret.com](https://platform.fatsecret.com/api/Default.aspx).
 2. Create an app — note the **Client ID** and **Client Secret**.
 3. Enable the **Image Recognition** add-on (Premier / Premier Free tier, 14-day trial available).
-4. Run the one-time profile setup to obtain `FATSECRET_OAUTH_TOKEN` / `FATSECRET_OAUTH_TOKEN_SECRET`:
+4. Run the one-time auth setup to link the plugin to your **existing fatsecret.com account**:
 
-```python
-# run once
-import requests
-from requests_oauthlib import OAuth1
-
-auth = OAuth1(
-    client_key="YOUR_CLIENT_ID",
-    client_secret="YOUR_CLIENT_SECRET",
-    # no resource_owner_key/secret for profile.create
-)
-resp = requests.get(
-    "https://platform.fatsecret.com/rest/server.api",
-    params={"method": "profile.create", "format": "json"},
-    auth=auth,
-)
-profile = resp.json()["profile"]
-print("FATSECRET_OAUTH_TOKEN =", profile["auth_token"])
-print("FATSECRET_OAUTH_TOKEN_SECRET =", profile["auth_secret"])
+```bash
+FATSECRET_CLIENT_ID=xxx FATSECRET_CLIENT_SECRET=yyy python3 setup_auth.py
 ```
 
-Set those two values in your shell or Hermes config and you're done.
+This opens fatsecret.com in your browser, you log in and click Allow, then paste the PIN back into the terminal. It prints the two env vars to store:
+
+```
+export FATSECRET_OAUTH_TOKEN=...
+export FATSECRET_OAUTH_TOKEN_SECRET=...
+```
+
+Add them to your shell profile or Hermes `.env` — you only need to do this once.
 
 ---
 
@@ -119,7 +110,7 @@ Tests run fully offline against recorded fixtures in `tests/fixtures/`.
 → Image recognition add-on may not be enabled on your FatSecret app — check your Premier tier status.
 
 **HTTP 401 on diary writes**  
-→ Your `FATSECRET_OAUTH_TOKEN` / `FATSECRET_OAUTH_TOKEN_SECRET` are stale or wrong. Re-run the profile setup script above.
+→ Your `FATSECRET_OAUTH_TOKEN` / `FATSECRET_OAUTH_TOKEN_SECRET` are stale or wrong. Re-run `setup_auth.py`.
 
 **Image too large error**  
 → The plugin auto-downscales via Pillow. Install Pillow if not present: `pip install Pillow`.
