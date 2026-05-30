@@ -38,12 +38,14 @@ pip install fatsecret-food-hermes
 ## FatSecret app setup
 
 1. Register at [platform.fatsecret.com](https://platform.fatsecret.com/api/Default.aspx).
-2. Create an app — note the **Client ID** and **Client Secret**.
+2. Generate API keys. Your app page shows **two credential pairs** — you need both:
+   - **Client ID / Client Secret** (OAuth 2.0) — for image recognition and food search
+   - **Consumer Key / Consumer Secret** (OAuth 1.0) — for diary writes and the setup below
 3. Enable the **Image Recognition** add-on (Premier / Premier Free tier, 14-day trial available).
 4. Run the one-time auth setup to link the plugin to your **existing fatsecret.com account**:
 
 ```bash
-FATSECRET_CLIENT_ID=xxx FATSECRET_CLIENT_SECRET=yyy python3 setup_auth.py
+FATSECRET_CONSUMER_KEY=xxx FATSECRET_CONSUMER_SECRET=yyy python3 setup_auth.py
 ```
 
 This opens fatsecret.com in your browser, you log in and click Allow, then paste the PIN back into the terminal. It prints the two env vars to store:
