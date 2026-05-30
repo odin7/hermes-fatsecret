@@ -1,0 +1,43 @@
+name: fatsecret-food
+version: 1.0.0
+description: >
+  Log food from photos. Identifies food via FatSecret Image Recognition,
+  presents candidates with nutrition, and logs the confirmed entry to the
+  user's FatSecret diary after explicit confirmation.
+author: personal
+
+provides_tools:
+  - analyze_food_photo
+  - search_food
+  - log_food_entry
+
+provides_hooks:
+  - post_tool_call
+
+provides_skills:
+  - log-food-from-photo
+
+requires_env:
+  - name: FATSECRET_CLIENT_ID
+    description: "FatSecret Platform API client ID (OAuth 2.0 + OAuth 1.0 consumer key)"
+    url: "https://platform.fatsecret.com/api/Default.aspx"
+    secret: false
+
+  - name: FATSECRET_CLIENT_SECRET
+    description: "FatSecret Platform API client secret (OAuth 2.0 + OAuth 1.0 consumer secret)"
+    url: "https://platform.fatsecret.com/api/Default.aspx"
+    secret: true
+
+  - name: FATSECRET_OAUTH_TOKEN
+    description: >
+      OAuth 1.0 access token for your personal FatSecret profile.
+      Obtain once via profile.create → profile.get_auth. See README for setup steps.
+    url: "https://platform.fatsecret.com/docs/v1/profile.get_auth"
+    secret: true
+
+  - name: FATSECRET_OAUTH_TOKEN_SECRET
+    description: >
+      OAuth 1.0 access token secret for your personal FatSecret profile.
+      Paired with FATSECRET_OAUTH_TOKEN.
+    url: "https://platform.fatsecret.com/docs/v1/profile.get_auth"
+    secret: true

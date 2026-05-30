@@ -1,0 +1,17 @@
+{
+  "food_entry": {
+    "food_entry_id": "99482145",
+    "food_entry_description": "Margherita Pizza, 1 slice",
+    "date_int": "20603",
+    "meal": "dinner",
+    "food_id": "33722",
+    "serving_id": "157886",
+    "number_of_units": "1.0",
+    "total_nutritional_content": {
+      "calories": "272",
+      "carbohydrate": "33.6",
+      "protein": "12.4",
+      "fat": "9.8"
+    }
+  }
+}

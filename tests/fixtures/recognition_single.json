@@ -1,0 +1,24 @@
+{
+  "food_response": {
+    "food_id": "33722",
+    "food_entry_name": "Margherita Pizza",
+    "suggested_serving": {
+      "serving_id": "157886",
+      "serving_description": "1 slice (107g)",
+      "calories": "272"
+    },
+    "eaten": {
+      "total_nutritional_content": {
+        "calories": "272",
+        "carbohydrate": "33.6",
+        "protein": "12.4",
+        "fat": "9.8",
+        "saturated_fat": "4.1",
+        "sodium": "551",
+        "potassium": "184",
+        "fiber": "2.3",
+        "sugar": "3.4"
+      }
+    }
+  }
+}

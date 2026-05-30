@@ -1,0 +1,44 @@
+{
+  "food_response": [
+    {
+      "food_id": "33722",
+      "food_entry_name": "Margherita Pizza",
+      "suggested_serving": {
+        "serving_id": "157886",
+        "serving_description": "1 slice (107g)",
+        "calories": "272"
+      },
+      "eaten": {
+        "total_nutritional_content": {
+          "calories": "272",
+          "carbohydrate": "33.6",
+          "protein": "12.4",
+          "fat": "9.8",
+          "saturated_fat": "4.1",
+          "sodium": "551",
+          "fiber": "2.3",
+          "sugar": "3.4"
+        }
+      }
+    },
+    {
+      "food_id": "59104",
+      "food_entry_name": "Caesar Salad",
+      "suggested_serving": {
+        "serving_id": "60659",
+        "serving_description": "1 serving (189g)",
+        "calories": "481"
+      },
+      "eaten": {
+        "total_nutritional_content": {
+          "calories": "481",
+          "carbohydrate": "20.0",
+          "protein": "9.5",
+          "fat": "40.8",
+          "sodium": "770",
+          "fiber": "3.1"
+        }
+      }
+    }
+  ]
+}

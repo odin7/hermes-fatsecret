@@ -1,0 +1,65 @@
+{
+  "foods": {
+    "food": [
+      {
+        "food_id": "33722",
+        "food_name": "Margherita Pizza",
+        "food_type": "Brand",
+        "brand_name": "Trader Joe's",
+        "servings": {
+          "serving": [
+            {
+              "serving_id": "157886",
+              "serving_description": "1 slice (107g)",
+              "metric_serving_amount": "107.0",
+              "metric_serving_unit": "g",
+              "calories": "272",
+              "carbohydrate": "33.6",
+              "protein": "12.4",
+              "fat": "9.8",
+              "saturated_fat": "4.1",
+              "sodium": "551",
+              "fiber": "2.3",
+              "sugar": "3.4"
+            },
+            {
+              "serving_id": "157887",
+              "serving_description": "1 pizza (440g)",
+              "metric_serving_amount": "440.0",
+              "metric_serving_unit": "g",
+              "calories": "1120",
+              "carbohydrate": "138.2",
+              "protein": "51.0",
+              "fat": "40.3",
+              "saturated_fat": "16.9",
+              "sodium": "2268",
+              "fiber": "9.5",
+              "sugar": "14.0"
+            }
+          ]
+        }
+      },
+      {
+        "food_id": "99012",
+        "food_name": "Margherita Pizza",
+        "food_type": "Generic",
+        "brand_name": null,
+        "servings": {
+          "serving": {
+            "serving_id": "77441",
+            "serving_description": "100g",
+            "metric_serving_amount": "100.0",
+            "metric_serving_unit": "g",
+            "calories": "254",
+            "carbohydrate": "31.4",
+            "protein": "11.6",
+            "fat": "9.2"
+          }
+        }
+      }
+    ],
+    "total_results": "2",
+    "page_number": "0",
+    "max_results": "10"
+  }
+}
