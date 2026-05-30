@@ -6,7 +6,7 @@ from datetime import date, datetime, timezone
 from functools import lru_cache
 from typing import Any
 
-from fatsecret.client import FatSecretClient
+from .fatsecret.client import FatSecretClient
 
 
 @lru_cache(maxsize=1)

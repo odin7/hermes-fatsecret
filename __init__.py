@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 from . import schemas, tools
 
@@ -25,7 +26,7 @@ def register(ctx) -> None:  # noqa: ANN001
         handler=tools.log_food_entry,
     )
 
-    ctx.register_skill("log-food-from-photo", __file__.replace("__init__.py", "skills/log-food-from-photo/SKILL.md"))
+    ctx.register_skill("log-food-from-photo", Path(__file__).parent / "skills/log-food-from-photo/SKILL.md")
     ctx.register_hook("post_tool_call", _post_tool_call_hook)
 
 
