@@ -12,14 +12,17 @@ Photo → FatSecret food logging in three tools:
 
 ## Install
 
+Symlink (recommended — edits to the repo are reflected immediately):
+
 ```bash
-pip install requests requests-oauthlib Pillow
-cp -r . ~/.hermes/plugins/fatsecret-food
+ln -s "$(pwd)" ~/.hermes/hermes-agent/plugins/fatsecret-food
 ```
 
-Or with the pip entry-point (if packaged):
+Or copy:
+
 ```bash
-pip install fatsecret-food-hermes
+pip install requests requests-oauthlib Pillow
+cp -r . ~/.hermes/hermes-agent/plugins/fatsecret-food
 ```
 
 ---
@@ -28,24 +31,22 @@ pip install fatsecret-food-hermes
 
 | Variable | Description |
 |---|---|
-| `FATSECRET_CLIENT_ID` | Platform API client ID |
-| `FATSECRET_CLIENT_SECRET` | Platform API client secret |
-| `FATSECRET_OAUTH_TOKEN` | Profile OAuth 1.0 token |
-| `FATSECRET_OAUTH_TOKEN_SECRET` | Profile OAuth 1.0 token secret |
+| `FATSECRET_CLIENT_ID` | Platform API client ID (= OAuth 1.0 Consumer Key) |
+| `FATSECRET_CLIENT_SECRET` | Platform API client secret (= OAuth 1.0 Consumer Secret) |
+| `FATSECRET_OAUTH_TOKEN` | Profile OAuth 1.0 access token (from setup below) |
+| `FATSECRET_OAUTH_TOKEN_SECRET` | Profile OAuth 1.0 access token secret (from setup below) |
 
 ---
 
 ## FatSecret app setup
 
 1. Register at [platform.fatsecret.com](https://platform.fatsecret.com/api/Default.aspx).
-2. Generate API keys. Your app page shows **two credential pairs** — you need both:
-   - **Client ID / Client Secret** (OAuth 2.0) — for image recognition and food search
-   - **Consumer Key / Consumer Secret** (OAuth 1.0) — for diary writes and the setup below
+2. Create an app — your app page shows a **Client ID / Client Secret** pair. FatSecret uses the same credentials for both OAuth 2.0 (image recognition, search) and OAuth 1.0 (diary writes); they're also labelled "Consumer Key / Consumer Secret" in OAuth 1.0 contexts — same values.
 3. Enable the **Image Recognition** add-on (Premier / Premier Free tier, 14-day trial available).
 4. Run the one-time auth setup to link the plugin to your **existing fatsecret.com account**:
 
 ```bash
-FATSECRET_CONSUMER_KEY=xxx FATSECRET_CONSUMER_SECRET=yyy python3 setup_auth.py
+FATSECRET_CLIENT_ID=xxx FATSECRET_CLIENT_SECRET=yyy python3 setup_auth.py
 ```
 
 This opens fatsecret.com in your browser, you log in and click Allow, then paste the PIN back into the terminal. It prints the two env vars to store:
@@ -55,20 +56,16 @@ export FATSECRET_OAUTH_TOKEN=...
 export FATSECRET_OAUTH_TOKEN_SECRET=...
 ```
 
-Add them to your shell profile or Hermes `.env` — you only need to do this once.
+Add all four vars to your shell profile or Hermes `.env` — you only need to do this once.
 
 ---
 
 ## Auth architecture
 
-Two auth flows run in parallel:
+Both auth flows use the same `FATSECRET_CLIENT_ID` / `FATSECRET_CLIENT_SECRET` credentials:
 
-- **OAuth 2.0 client credentials** (`FATSECRET_CLIENT_ID` + `FATSECRET_CLIENT_SECRET`)  
-  Used for: Image Recognition, `foods.search`, `food.get`  
-  Token auto-refreshes every ~24 h.
-
-- **OAuth 1.0 HMAC-SHA1 signed + delegated** (all four vars)  
-  Used for: `food_entry.create` (diary writes require a profile token)
+- **OAuth 2.0 client credentials** — used for Image Recognition, `foods.search`, `food.get`. Token auto-refreshes every ~24 h.
+- **OAuth 1.0 HMAC-SHA1 signed + delegated** (all four vars) — used for `food_entry.create` (diary writes require a profile token).
 
 ---
 
@@ -85,10 +82,9 @@ Two auth flows run in parallel:
 
 ## Configuration (optional)
 
-Override defaults via environment variables:
-
 | Variable | Default | Description |
 |---|---|---|
+| `FATSECRET_RECOGNITION_BACKEND` | `fatsecret` | `fatsecret` uses the Image Recognition API; `hermes` uses the model's vision + text search (no add-on required) |
 | `FATSECRET_REGION` | `US` | Default region for search / recognition |
 | `FATSECRET_LANGUAGE` | `en` | Default language for results |
 
@@ -97,7 +93,7 @@ Override defaults via environment variables:
 ## Running tests
 
 ```bash
-cd ~/.hermes/plugins/fatsecret-food
+cd ~/.hermes/hermes-agent/plugins/fatsecret-food
 pip install requests requests-oauthlib
 python -m pytest tests/ -v
 ```
