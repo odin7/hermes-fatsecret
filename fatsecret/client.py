@@ -22,7 +22,7 @@ from .models import (
 _RECOGNITION_URL = "https://platform.fatsecret.com/rest/image-recognition/v1"
 _SEARCH_URL = "https://platform.fatsecret.com/rest/foods/search/v5"
 _FOOD_GET_URL = "https://platform.fatsecret.com/rest/food/v5"
-_FOOD_ENTRY_URL = "https://platform.fatsecret.com/rest/food-entries/v1"
+_FOOD_ENTRY_URL = "https://platform.fatsecret.com/rest/server.api"
 
 # base64 limit per FatSecret docs: 999,982 chars ≈ 750 KB raw bytes
 _MAX_IMAGE_BYTES = 750_000
@@ -208,10 +208,11 @@ class FatSecretClient:
         resp = self._session.post(
             _FOOD_ENTRY_URL,
             data={
+                "method": "food_entry.create",
                 "food_id": food_id,
                 "serving_id": serving_id,
                 "number_of_units": str(number_of_units),
-                "meal": meal,
+                "meal": meal.lower(),
                 "food_entry_name": food_entry_name,
                 "date": str(_days_since_epoch(entry_date)),
                 "format": "json",
@@ -221,6 +222,13 @@ class FatSecretClient:
         )
         resp.raise_for_status()
         data = resp.json()
+
+        # FatSecret returns HTTP 200 for errors; check for an error body.
+        if "error" in data:
+            err = data["error"]
+            code = err.get("code", "?")
+            msg = err.get("message", str(err))
+            raise ValueError(f"FatSecret error {code}: {msg}")
 
         entry = data.get("food_entry") or data
         nc = entry.get("total_nutritional_content") or {}

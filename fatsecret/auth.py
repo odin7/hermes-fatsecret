@@ -70,9 +70,11 @@ class OAuth1Signer:
 
     @classmethod
     def from_env(cls) -> "OAuth1Signer":
+        # FatSecret issues separate OAuth 1.0 Consumer Key/Secret distinct from
+        # the OAuth 2.0 Client ID/Secret. Prefer the explicit consumer vars if set.
         return cls(
-            consumer_key=os.environ["FATSECRET_CLIENT_ID"],
-            consumer_secret=os.environ["FATSECRET_CLIENT_SECRET"],
+            consumer_key=os.environ.get("FATSECRET_CONSUMER_KEY") or os.environ["FATSECRET_CLIENT_ID"],
+            consumer_secret=os.environ.get("FATSECRET_CONSUMER_SECRET") or os.environ["FATSECRET_CLIENT_SECRET"],
             oauth_token=os.environ["FATSECRET_OAUTH_TOKEN"],
             oauth_token_secret=os.environ["FATSECRET_OAUTH_TOKEN_SECRET"],
         )

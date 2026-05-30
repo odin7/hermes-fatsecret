@@ -43,6 +43,16 @@ requires_env:
     secret: true
 
 optional_env:
+  - name: FATSECRET_CONSUMER_KEY
+    description: >
+      OAuth 1.0 Consumer Key if different from FATSECRET_CLIENT_ID.
+      FatSecret issues separate OAuth 1.0 credentials for some app tiers.
+      Find on your app page at platform.fatsecret.com under "Consumer Key".
+
+  - name: FATSECRET_CONSUMER_SECRET
+    description: >
+      OAuth 1.0 Consumer Secret paired with FATSECRET_CONSUMER_KEY.
+
   - name: FATSECRET_RECOGNITION_BACKEND
     description: >
       Image recognition backend. 'fatsecret' (default) calls the FatSecret
