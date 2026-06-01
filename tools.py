@@ -6,7 +6,12 @@ from datetime import date, datetime, timezone
 from functools import lru_cache
 from typing import Any
 
-from .fatsecret.client import FatSecretClient
+if __package__:
+    # Loaded as a package submodule (installed plugin / `from . import tools`).
+    from .fatsecret.client import FatSecretClient
+else:
+    # Loaded flat (tests do `import tools` with the repo root on sys.path).
+    from fatsecret.client import FatSecretClient
 
 
 @lru_cache(maxsize=1)
