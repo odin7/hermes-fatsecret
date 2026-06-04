@@ -212,7 +212,7 @@ class FatSecretClient:
                 "food_id": food_id,
                 "serving_id": serving_id,
                 "number_of_units": str(number_of_units),
-                "meal": meal.lower(),
+                "meal": meal,
                 "food_entry_name": food_entry_name,
                 "date": str(_days_since_epoch(entry_date)),
                 "format": "json",

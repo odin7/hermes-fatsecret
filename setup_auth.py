@@ -107,7 +107,7 @@ def main() -> None:
 
     # Step 2 — authorize
     auth_url = f"{AUTHORIZE_URL}?oauth_token={request_token}"
-    print(f"\nOpening FatSecret authorization page in your browser...")
+    print("\nOpening FatSecret authorization page in your browser...")
     print(f"If it doesn't open, visit:\n  {auth_url}\n")
     webbrowser.open(auth_url)
 
