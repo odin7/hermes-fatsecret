@@ -85,8 +85,8 @@ Both auth flows use the same `FATSECRET_CLIENT_ID` / `FATSECRET_CLIENT_SECRET` c
 | Variable | Default | Description |
 |---|---|---|
 | `FATSECRET_RECOGNITION_BACKEND` | `fatsecret` | `fatsecret` uses the Image Recognition API; `hermes` uses the model's vision + text search (no add-on required) |
-| `FATSECRET_REGION` | `US` | Default region for search / recognition |
-| `FATSECRET_LANGUAGE` | `en` | Default language for results |
+
+Region and language are not env vars — pass them per call via the `region` / `language` tool arguments (default `US` / `en`).
 
 ---
 

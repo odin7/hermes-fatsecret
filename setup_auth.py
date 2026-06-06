@@ -2,14 +2,15 @@
 """
 One-time setup: link this plugin to your existing fatsecret.com account.
 
-FatSecret issues TWO separate credential pairs:
-  - OAuth 2.0  → Client ID + Client Secret  (image recognition, food search)
-  - OAuth 1.0  → Consumer Key + Consumer Secret  (diary writes — needed here)
+FatSecret uses the SAME Client ID / Client Secret for both auth flows:
+  - OAuth 2.0  → image recognition, food search
+  - OAuth 1.0  → diary writes (the access token this script mints)
+In OAuth 1.0 contexts these are also labelled "Consumer Key / Consumer Secret".
 
-Find your Consumer Key and Consumer Secret at platform.fatsecret.com → your app.
+Find your Client ID and Client Secret at platform.fatsecret.com → your app.
 
 Usage:
-    FATSECRET_CONSUMER_KEY=xxx FATSECRET_CONSUMER_SECRET=yyy python3 setup_auth.py
+    FATSECRET_CLIENT_ID=xxx FATSECRET_CLIENT_SECRET=yyy python3 setup_auth.py
 
 Prints the two env vars to add to your shell profile / Hermes config.
 
