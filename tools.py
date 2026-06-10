@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import os
-from datetime import date, datetime, timezone
+from datetime import date, datetime
 from functools import lru_cache
 from typing import Any
 
@@ -20,7 +20,7 @@ def _client() -> FatSecretClient:
 
 
 def _default_meal() -> str:
-    hour = datetime.now(tz=timezone.utc).hour
+    hour = datetime.now().hour
     if hour < 11:
         return "breakfast"
     if hour < 15:
@@ -174,7 +174,7 @@ def log_food_entry(args: dict, **kwargs: Any) -> str:
             return json.dumps({"error": f"Invalid date format: {args['date']}. Use YYYY-MM-DD."})
 
     if entry_date is None:
-        entry_date = datetime.now(tz=timezone.utc).date()
+        entry_date = datetime.now().date()
 
     # Phase 4.5: idempotency guard — skip duplicate within same session
     dedup_key = (food_id, serving_id, meal, entry_date.isoformat())

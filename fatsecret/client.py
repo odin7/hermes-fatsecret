@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import base64
 import io
-from datetime import date, datetime, timezone
+from datetime import date, datetime
 from pathlib import Path
 from typing import Optional
 from urllib.request import urlopen
@@ -203,7 +203,7 @@ class FatSecretClient:
         entry_date: Optional[date] = None,
     ) -> LogResult:
         if entry_date is None:
-            entry_date = datetime.now(tz=timezone.utc).date()
+            entry_date = datetime.now().date()
 
         resp = self._session.post(
             _FOOD_ENTRY_URL,
